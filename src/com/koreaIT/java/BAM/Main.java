@@ -5,13 +5,18 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
+	// Main 전역 변수
+	private static List<Article> articles;
+	// Static 생성자로 초기화
+	static { articles = new ArrayList<>(); }
+	
 	public static void main(String[] args) {
 		System.out.println("== 프로그램 시작 ==");
+		
+		makeTestData();
+		
 		Scanner sc = new Scanner(System.in);
-		int contentId = 0;
-
-		List<Article> articles = new ArrayList<>();
-
+		
 		while (true) {
 			System.out.printf("명령어 ) ");
 			String cmd = sc.nextLine().trim();
@@ -29,8 +34,7 @@ public class Main {
 
 			// 게시글 작성
 			if (cmd.equals("write")) {
-				int id = contentId + 1;
-				contentId = id;
+				int id = articles.size() + 1;
 				String regDate = Util.getNowDataStr();
 
 				System.out.printf("제목 : ");
@@ -145,6 +149,13 @@ public class Main {
 		System.out.println("== 프로그램 끝 ==");
 		sc.close();
 	}
+
+	private static void makeTestData() {
+		System.out.println("테스트를 위한 게시물 데이터를 생성합니다.\n");
+		articles.add(new Article(1, Util.getNowDataStr() , "제목 1", "내용 1", 111));
+		articles.add(new Article(2, Util.getNowDataStr() , "제목 2", "내용 2", 222));
+		articles.add(new Article(3, Util.getNowDataStr() , "제목 3", "내용 3", 333));
+	}
 }
 
 class Article {
@@ -155,13 +166,17 @@ class Article {
 	int viewCnt;
 
 	Article(int id, String regDate, String title, String body) {
+		this(id, regDate, title, body, 0);
+	}
+	
+	Article(int id, String regDate, String title, String body, int viewCnt) {
 		this.id = id;
 		this.regDate = regDate;
 		this.title = title;
 		this.body = body;
-		this.viewCnt = 0;
+		this.viewCnt = viewCnt;
 	}
-	
+
 	public void addViewCnt() {
 		this.viewCnt += 1;
 	}
