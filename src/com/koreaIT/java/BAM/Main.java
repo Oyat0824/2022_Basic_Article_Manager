@@ -50,10 +50,10 @@ public class Main {
 					continue;
 				}
 
-				System.out.println("번호		|		제목		|		작성일");
+				System.out.println("번호		|		제목		|		작성일			|		조회수");
 				for (int i = articles.size() - 1; i >= 0; i--) {
 					Article article = articles.get(i);
-					System.out.printf("%d		|		%s		|		%s\n", article.id, article.title, article.regDate.substring(0, 10));
+					System.out.printf("%d		|		%s		|		%s		|		%s\n", article.id, article.title, article.regDate.substring(0, 10), article.viewCnt);
 				}
 
 			// 게시글 내용 확인
@@ -76,8 +76,11 @@ public class Main {
 					continue;
 				}
 				
+				foundArticle.addViewCnt();
+				
 				System.out.println("번호 : " + foundArticle.id);
 				System.out.println("날짜 : " + foundArticle.regDate);
+				System.out.println("조회 : " + foundArticle.viewCnt);
 				System.out.println("제목 : " + foundArticle.title);
 				System.out.println("내용 : " + foundArticle.body);
 
@@ -104,6 +107,35 @@ public class Main {
 				articles.remove(foundArticle);
 				System.out.printf("%d번 게시물이 삭제되었습니다.\n", id);
 
+			// 게시글 수정
+			} else if (cmd.startsWith("modify ")) {
+				String[] cmdBits = cmd.split(" ");
+				int id = Integer.parseInt(cmdBits[1]);
+
+				Article foundArticle = null;
+
+				for (Article article : articles) {
+					if (article.id == id) {
+						foundArticle = article;
+
+						break;
+					}
+				}
+
+				if (foundArticle == null) {
+					System.out.printf("%d번 게시물이 존재하지 않습니다.\n", id);
+					continue;
+				}
+
+				System.out.printf("수정할 제목 : ");
+				String title = sc.nextLine();
+				System.out.printf("수정할 내용 : ");
+				String body = sc.nextLine();
+				
+				foundArticle.title = title;
+				foundArticle.body = body;
+				System.out.printf("%d번 게시물이 수정되었습니다.\n", id);
+				
 			// 명령어가 존재하지 않는 경우
 			} else {
 				System.out.println("존재하지 않는 명령어 입니다.");
@@ -120,11 +152,17 @@ class Article {
 	String regDate;
 	String title;
 	String body;
+	int viewCnt;
 
 	Article(int id, String regDate, String title, String body) {
 		this.id = id;
 		this.regDate = regDate;
 		this.title = title;
 		this.body = body;
+		this.viewCnt = 0;
+	}
+	
+	public void addViewCnt() {
+		this.viewCnt += 1;
 	}
 }
