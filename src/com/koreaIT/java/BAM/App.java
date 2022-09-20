@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.net.ssl.SSLContext;
+
 import com.koreaIT.java.BAM.dto.Article;
 import com.koreaIT.java.BAM.util.Util;
 
@@ -53,17 +55,38 @@ public class App {
 				System.out.printf("%d번 글이 생성되었습니다.\n", id);
 
 			// 게시글 리스트
-			} else if (cmd.equals("list")) {
+			} else if (cmd.startsWith("list")) {
 				if (articles.isEmpty()) {
 					System.out.println("게시글이 존재하지 않습니다.");
 					continue;
 				}
-
+				
+				// 게시글 검색 기능
+				List<Article> forPrintArticles = articles;
+				
+				String searchKeyword = cmd.substring("list".length()).trim();
+				
+				if(searchKeyword.length() > 0) {
+					System.out.println("검색어 : " + searchKeyword);
+					
+					forPrintArticles = new ArrayList<>();
+					
+					for(Article article : articles) {
+						if(article.title.contains(searchKeyword)) {
+							forPrintArticles.add(article);
+						}
+					}
+					
+					if(forPrintArticles.size() == 0) {
+						System.out.println("검색결과가 없습니다.\n");
+						continue;
+					}
+				}
+				
 				System.out.println("번호		|		제목		|		작성일			|		조회수");
-				for (int i = articles.size() - 1; i >= 0; i--) {
-					Article article = articles.get(i);
-					System.out.printf("%d		|		%s		|		%s		|		%s\n", article.id,
-							article.title, article.regDate.substring(0, 10), article.viewCnt);
+				for (int i = forPrintArticles.size() - 1; i >= 0; i--) {
+					Article article = forPrintArticles.get(i);
+					System.out.printf("%d		|		%s		|		%s		|		%s\n", article.id, article.title, article.regDate.substring(0, 10), article.viewCnt);
 				}
 
 			// 게시글 내용 확인
@@ -124,7 +147,7 @@ public class App {
 				foundArticle.title = title;
 				foundArticle.body = body;
 				System.out.printf("%d번 게시물이 수정되었습니다.\n", id);
-
+				
 			// 명령어가 존재하지 않는 경우
 			} else {
 				System.out.println("존재하지 않는 명령어 입니다.");
@@ -135,7 +158,7 @@ public class App {
 		sc.close();
 	}
 	
-	// 게시글 찾기 메소드
+	// 게시글 찾기 메서드
 	private Article getArticleById(int id) {
 		for (Article article : articles) {
 			if (article.id == id) {
@@ -145,7 +168,7 @@ public class App {
 		
 		return null;
 	}
-	
+		
 	// 테스트 게시글 생성 메소드
 	private void makeTestData() {
 		System.out.println("테스트를 위한 게시물 데이터를 생성합니다.\n");
