@@ -37,17 +37,16 @@ public class App {
 
 			// 명령어를 입력 안했을 경우
 			if (cmd.equals("")) {
-				System.out.println("명령어를 입력해주세요.");
+				System.out.println("[❌] 명령어를 입력해주세요.");
 				continue;
 			}
 
 //			회원가입 기능
 			if (cmd.equals("join")) {
-//				아이디가 중복또는 입력이 없는 경우 아이디부터 재입력하는 기능
-//				비밀번호 일치하면 넘어가고, 아닌 경우 비번부터 재입력하는 기능
 				int id = members.size() + 1;
 				String regDate = Util.getNowDataStr();
 
+//				아이디 루프
 				String loginId = null;
 
 				while (true) {
@@ -55,25 +54,19 @@ public class App {
 					loginId = sc.nextLine();
 
 					if (loginId.isEmpty()) {
-						System.out.println("아이디를 입력해주세요.");
+						System.out.println("[❌] 아이디를 입력해주세요.");
 						continue;
 					}
 
-					boolean idChk = false;
-					for (Member member : members) {
-						if (member.loginId.equals(loginId)) {
-							idChk = true;
-						}
-					}
-
-					if (idChk == true) {
-						System.out.printf(">> %s 아이디는 이미 존재합니다.\n", loginId);
+					if (loginIdChk(loginId) == false) {
+						System.out.printf("[❌] 해당 아이디 < %s > 는 이미 사용중인 아이디입니다.\n", loginId);
 						continue;
 					}
-
+					System.out.printf("[✔️] 해당 아이디 < %s > 는 사용가능한 아이디입니다.\n", loginId);
 					break;
 				}
 
+//				비밀번호 루프
 				String loginPw = null;
 				String loginPwChk = null;
 
@@ -83,8 +76,13 @@ public class App {
 					System.out.printf("비밀번호 확인 : ");
 					loginPwChk = sc.nextLine();
 
-					if (!loginPw.equals(loginPwChk)) {
-						System.out.println(">> 비밀번호가 일치하지 않습니다.");
+					if (loginPw.isEmpty()) {
+						System.out.println("[❌] 비밀번호를 입력해주세요.");
+						continue;
+					}
+
+					if (loginPw.equals(loginPwChk) == false) {
+						System.out.println("[❌] 비밀번호가 일치하지 않습니다, 다시 입력해주세요.");
 						continue;
 					}
 
@@ -97,7 +95,7 @@ public class App {
 				Member member = new Member(id, regDate, loginId, loginPw, name);
 				members.add(member);
 
-				System.out.printf("[ %s ] 회원님 가입을 축하드립니다!\n", loginId);
+				System.out.printf("[✔️] [ %s ] 회원님 가입을 축하드립니다!\n", loginId);
 
 //			게시글 작성
 			} else if (cmd.equals("write")) {
@@ -112,12 +110,12 @@ public class App {
 				Article article = new Article(id, regDate, title, body);
 				articles.add(article);
 
-				System.out.printf("%d번 글이 생성되었습니다.\n", id);
+				System.out.printf("[✔️] %d번 글이 생성되었습니다.\n", id);
 
 //			게시글 리스트
 			} else if (cmd.startsWith("list")) {
 				if (articles.isEmpty()) {
-					System.out.println("게시글이 존재하지 않습니다.");
+					System.out.println("[❌] 게시글이 존재하지 않습니다.");
 					continue;
 				}
 
@@ -129,9 +127,6 @@ public class App {
 				if (searchKeyword.length() > 0) {
 					System.out.println("검색어 : " + searchKeyword);
 
-//					필터 기능을 통해 구현도 가능하다.
-//					forPrintArticles = articles.stream().filter(a -> a.title.contains(searchKeyword)).collect(Collectors.toList());
-
 					forPrintArticles = new ArrayList<>();
 
 					for (Article article : articles) {
@@ -141,7 +136,7 @@ public class App {
 					}
 
 					if (forPrintArticles.size() == 0) {
-						System.out.println("검색결과가 없습니다.\n");
+						System.out.println("[❌] 검색결과가 없습니다.\n");
 						continue;
 					}
 				}
@@ -161,7 +156,7 @@ public class App {
 				Article foundArticle = getArticleById(id);
 
 				if (foundArticle == null) {
-					System.out.printf("%d번 게시물이 존재하지 않습니다.\n", id);
+					System.out.printf("[❌] %d번 게시물이 존재하지 않습니다.\n", id);
 					continue;
 				}
 
@@ -181,12 +176,12 @@ public class App {
 				Article foundArticle = getArticleById(id);
 
 				if (foundArticle == null) {
-					System.out.printf("%d번 게시물이 존재하지 않습니다.\n", id);
+					System.out.printf("[❌] %d번 게시물이 존재하지 않습니다.\n", id);
 					continue;
 				}
 
 				articles.remove(foundArticle);
-				System.out.printf("%d번 게시물이 삭제되었습니다.\n", id);
+				System.out.printf("[✔️] %d번 게시물이 삭제되었습니다.\n", id);
 
 //			게시글 수정
 			} else if (cmd.startsWith("modify ")) {
@@ -196,7 +191,7 @@ public class App {
 				Article foundArticle = getArticleById(id);
 
 				if (foundArticle == null) {
-					System.out.printf("%d번 게시물이 존재하지 않습니다.\n", id);
+					System.out.printf("[❌] %d번 게시물이 존재하지 않습니다.\n", id);
 					continue;
 				}
 
@@ -207,16 +202,37 @@ public class App {
 
 				foundArticle.title = title;
 				foundArticle.body = body;
-				System.out.printf("%d번 게시물이 수정되었습니다.\n", id);
+				System.out.printf("[✔️] %d번 게시물이 수정되었습니다.\n", id);
 
 //			존재하지 않는 명령어
 			} else {
-				System.out.println("존재하지 않는 명령어 입니다.");
+				System.out.println("[❌] 존재하지 않는 명령어 입니다.");
 			}
 		}
 
 		System.out.println("== 프로그램 끝 ==");
 		sc.close();
+	}
+
+//	아이디 중복 체크 메서드
+	private boolean loginIdChk(String loginId) {
+		int index = getMemberIndexByLoginId(loginId);
+
+		if (index == -1) {
+			return true;
+		}
+
+		return false;
+	}
+
+	private int getMemberIndexByLoginId(String loginId) {
+		for (Member member : members) {
+			if (member.loginId.equals(loginId)) {
+				return members.indexOf(member);
+			}
+		}
+
+		return -1;
 	}
 
 	// 게시글 찾기 메서드
@@ -230,7 +246,7 @@ public class App {
 		return null;
 	}
 
-	// 테스트 게시글 생성 메소드
+//	테스트 게시글 생성 메소드
 	private void makeTestData() {
 		System.out.println("테스트를 위한 게시물 데이터를 생성합니다.\n");
 		articles.add(new Article(1, Util.getNowDataStr(), "제목 1", "내용 1", 111));
