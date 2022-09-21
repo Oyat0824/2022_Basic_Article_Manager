@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.koreaIT.java.BAM.controller.ArticleController;
+import com.koreaIT.java.BAM.controller.MemberController;
 import com.koreaIT.java.BAM.dto.Article;
 import com.koreaIT.java.BAM.dto.Member;
 import com.koreaIT.java.BAM.util.Util;
@@ -23,19 +25,22 @@ public class App {
 
 		Scanner sc = new Scanner(System.in);
 
-		// 더미 데이터 생성
+//		더미 데이터 생성
 		makeTestData();
+		
+		MemberController memberController = new MemberController(members, sc);
+		ArticleController articleController = new ArticleController();
 
 		while (true) {
 			System.out.printf("명령어 ) ");
 			String cmd = sc.nextLine().trim();
 
-			// 프로그램 종료
+//			프로그램 종료
 			if (cmd.equals("exit")) {
 				break;
 			}
 
-			// 명령어를 입력 안했을 경우
+//			명령어를 입력 안했을 경우
 			if (cmd.equals("")) {
 				System.out.println("[❌] 명령어를 입력해주세요.");
 				continue;
@@ -43,59 +48,7 @@ public class App {
 
 //			회원가입 기능
 			if (cmd.equals("join")) {
-				int id = members.size() + 1;
-				String regDate = Util.getNowDataStr();
-
-//				아이디 루프
-				String loginId = null;
-
-				while (true) {
-					System.out.printf("로그인할 아이디 : ");
-					loginId = sc.nextLine();
-
-					if (loginId.isEmpty()) {
-						System.out.println("[❌] 아이디를 입력해주세요.");
-						continue;
-					}
-
-					if (loginIdChk(loginId) == false) {
-						System.out.printf("[❌] 해당 아이디 < %s > 는 이미 사용중인 아이디입니다.\n", loginId);
-						continue;
-					}
-					System.out.printf("[✔️] 해당 아이디 < %s > 는 사용가능한 아이디입니다.\n", loginId);
-					break;
-				}
-
-//				비밀번호 루프
-				String loginPw = null;
-				String loginPwChk = null;
-
-				while (true) {
-					System.out.printf("로그인할 비밀번호 : ");
-					loginPw = sc.nextLine();
-					System.out.printf("비밀번호 확인 : ");
-					loginPwChk = sc.nextLine();
-
-					if (loginPw.isEmpty()) {
-						System.out.println("[❌] 비밀번호를 입력해주세요.");
-						continue;
-					}
-
-					if (loginPw.equals(loginPwChk) == false) {
-						System.out.println("[❌] 비밀번호가 일치하지 않습니다, 다시 입력해주세요.");
-						continue;
-					}
-
-					break;
-				}
-
-				System.out.printf("이름 : ");
-				String name = sc.nextLine();
-
-				Member member = new Member(id, regDate, loginId, loginPw, name);
-				members.add(member);
-
-				System.out.printf("[✔️] [ %s ] 회원님 가입을 축하드립니다!\n", loginId);
+				memberController.doJoin();
 
 //			게시글 작성
 			} else if (cmd.equals("write")) {
@@ -214,28 +167,7 @@ public class App {
 		sc.close();
 	}
 
-//	아이디 중복 체크 메서드
-	private boolean loginIdChk(String loginId) {
-		int index = getMemberIndexByLoginId(loginId);
-
-		if (index == -1) {
-			return true;
-		}
-
-		return false;
-	}
-
-	private int getMemberIndexByLoginId(String loginId) {
-		for (Member member : members) {
-			if (member.loginId.equals(loginId)) {
-				return members.indexOf(member);
-			}
-		}
-
-		return -1;
-	}
-
-	// 게시글 찾기 메서드
+//	게시글 찾기 메서드
 	private Article getArticleById(int id) {
 		for (Article article : articles) {
 			if (article.id == id) {
