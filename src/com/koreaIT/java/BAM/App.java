@@ -13,7 +13,7 @@ import com.koreaIT.java.BAM.util.Util;
 public class App {
 	// Main 전역 변수
 	private List<Article> articles; // 게시글 목록
-	private List<Member> members; // 회원 목록
+	private List<Member> members; 	// 회원 목록
 
 	App() {
 		articles = new ArrayList<>();
@@ -28,8 +28,9 @@ public class App {
 //		더미 데이터 생성
 		makeTestData();
 		
+//		컨트롤러 객체 생성
 		MemberController memberController = new MemberController(members, sc);
-		ArticleController articleController = new ArticleController();
+		ArticleController articleController = new ArticleController(articles, sc);
 
 		while (true) {
 			System.out.printf("명령어 ) ");
@@ -46,117 +47,31 @@ public class App {
 				continue;
 			}
 
+			
 //			회원가입 기능
 			if (cmd.equals("join")) {
 				memberController.doJoin();
-
+				
 //			게시글 작성
 			} else if (cmd.equals("write")) {
-				int id = articles.size() + 1;
-				String regDate = Util.getNowDataStr();
-
-				System.out.printf("제목 : ");
-				String title = sc.nextLine();
-				System.out.printf("내용 : ");
-				String body = sc.nextLine();
-
-				Article article = new Article(id, regDate, title, body);
-				articles.add(article);
-
-				System.out.printf("[✔️] %d번 글이 생성되었습니다.\n", id);
-
+				articleController.doWrite();
+				
 //			게시글 리스트
 			} else if (cmd.startsWith("list")) {
-				if (articles.isEmpty()) {
-					System.out.println("[❌] 게시글이 존재하지 않습니다.");
-					continue;
-				}
-
-//				게시글 검색 기능
-				List<Article> forPrintArticles = articles;
-
-				String searchKeyword = cmd.substring("list".length()).trim();
-
-				if (searchKeyword.length() > 0) {
-					System.out.println("검색어 : " + searchKeyword);
-
-					forPrintArticles = new ArrayList<>();
-
-					for (Article article : articles) {
-						if (article.title.contains(searchKeyword)) {
-							forPrintArticles.add(article);
-						}
-					}
-
-					if (forPrintArticles.size() == 0) {
-						System.out.println("[❌] 검색결과가 없습니다.\n");
-						continue;
-					}
-				}
-
-				System.out.println("번호		|		제목		|		작성일			|		조회수");
-				for (int i = forPrintArticles.size() - 1; i >= 0; i--) {
-					Article article = forPrintArticles.get(i);
-					System.out.printf("%d		|		%s		|		%s		|		%s\n", article.id,
-							article.title, article.regDate.substring(0, 10), article.viewCnt);
-				}
-
+				articleController.showList(cmd);
+				
 //			게시글 내용 확인
 			} else if (cmd.startsWith("detail ")) {
-				String[] cmdBits = cmd.split(" ");
-				int id = Integer.parseInt(cmdBits[1]);
-
-				Article foundArticle = getArticleById(id);
-
-				if (foundArticle == null) {
-					System.out.printf("[❌] %d번 게시물이 존재하지 않습니다.\n", id);
-					continue;
-				}
-
-				foundArticle.addViewCnt();
-
-				System.out.println("번호 : " + foundArticle.id);
-				System.out.println("날짜 : " + foundArticle.regDate);
-				System.out.println("조회 : " + foundArticle.viewCnt);
-				System.out.println("제목 : " + foundArticle.title);
-				System.out.println("내용 : " + foundArticle.body);
-
+				articleController.showDetail(cmd);
+				
 //			게시글 삭제
 			} else if (cmd.startsWith("delete ")) {
-				String[] cmdBits = cmd.split(" ");
-				int id = Integer.parseInt(cmdBits[1]);
-
-				Article foundArticle = getArticleById(id);
-
-				if (foundArticle == null) {
-					System.out.printf("[❌] %d번 게시물이 존재하지 않습니다.\n", id);
-					continue;
-				}
-
-				articles.remove(foundArticle);
-				System.out.printf("[✔️] %d번 게시물이 삭제되었습니다.\n", id);
-
+				articleController.doDelete(cmd);
+				
 //			게시글 수정
 			} else if (cmd.startsWith("modify ")) {
-				String[] cmdBits = cmd.split(" ");
-				int id = Integer.parseInt(cmdBits[1]);
-
-				Article foundArticle = getArticleById(id);
-
-				if (foundArticle == null) {
-					System.out.printf("[❌] %d번 게시물이 존재하지 않습니다.\n", id);
-					continue;
-				}
-
-				System.out.printf("수정할 제목 : ");
-				String title = sc.nextLine();
-				System.out.printf("수정할 내용 : ");
-				String body = sc.nextLine();
-
-				foundArticle.title = title;
-				foundArticle.body = body;
-				System.out.printf("[✔️] %d번 게시물이 수정되었습니다.\n", id);
-
+				articleController.doModify(cmd);
+				
 //			존재하지 않는 명령어
 			} else {
 				System.out.println("[❌] 존재하지 않는 명령어 입니다.");
@@ -165,17 +80,6 @@ public class App {
 
 		System.out.println("== 프로그램 끝 ==");
 		sc.close();
-	}
-
-//	게시글 찾기 메서드
-	private Article getArticleById(int id) {
-		for (Article article : articles) {
-			if (article.id == id) {
-				return article;
-			}
-		}
-
-		return null;
 	}
 
 //	테스트 게시글 생성 메소드

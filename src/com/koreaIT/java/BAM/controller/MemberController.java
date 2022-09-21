@@ -10,6 +10,7 @@ public class MemberController {
 	List<Member> members;
 	Scanner sc;
 
+//	생성자
 	public MemberController(List<Member> members, Scanner sc) {
 		this.members = members;
 		this.sc = sc;
@@ -20,7 +21,7 @@ public class MemberController {
 		int id = members.size() + 1;
 		String regDate = Util.getNowDataStr();
 
-//		아이디 조건 루프
+		// 아이디 조건 루프
 		String loginId = null;
 
 		while (true) {
@@ -41,7 +42,7 @@ public class MemberController {
 			break;
 		}
 
-//		비밀번호 조건 루프
+		// 비밀번호 조건 루프
 		String loginPw = null;
 		String loginPwChk = null;
 
