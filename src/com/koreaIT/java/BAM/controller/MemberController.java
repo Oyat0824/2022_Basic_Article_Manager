@@ -6,7 +6,7 @@ import java.util.Scanner;
 import com.koreaIT.java.BAM.dto.Member;
 import com.koreaIT.java.BAM.util.Util;
 
-public class MemberController {
+public class MemberController extends Controller {
 	List<Member> members;
 	Scanner sc;
 
@@ -15,7 +15,12 @@ public class MemberController {
 		this.members = members;
 		this.sc = sc;
 	}
-
+	
+	@Override
+	public void doAction(String cmd) {
+		
+	}
+	
 //	회원가입 메서드
 	public void doJoin() {
 		int id = members.size() + 1;

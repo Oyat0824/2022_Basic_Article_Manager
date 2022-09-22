@@ -1,21 +1,26 @@
 package com.koreaIT.java.BAM.controller;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
 import com.koreaIT.java.BAM.dto.Article;
 import com.koreaIT.java.BAM.util.Util;
 
-public class ArticleController {
+public class ArticleController extends Controller {
 	List<Article> articles;
 	Scanner sc;
+	String cmd;
 
 //	생성자
 	public ArticleController(List<Article> articles, Scanner sc) {
 		this.articles = articles;
 		this.sc = sc;
+	}
+	
+	@Override
+	public void doAction(String cmd) {
+		this.cmd = cmd;
 	}
 
 //	게시글 작성 메서드
@@ -35,9 +40,9 @@ public class ArticleController {
 	}
 
 //	게시글 수정 메서드
-	public void doModify(String cmd) {
+	public void doModify() {
 		String[] cmdBits = cmd.split(" ");
-		int id = Integer.parseInt(cmdBits[1]);
+		int id = Integer.parseInt(cmdBits[2]);
 
 		Article foundArticle = getArticleById(id);
 
@@ -57,9 +62,9 @@ public class ArticleController {
 	}
 
 //	게시글 삭제 메서드
-	public void doDelete(String cmd) {
+	public void doDelete() {
 		String[] cmdBits = cmd.split(" ");
-		int id = Integer.parseInt(cmdBits[1]);
+		int id = Integer.parseInt(cmdBits[2]);
 
 		Article foundArticle = getArticleById(id);
 
@@ -73,7 +78,7 @@ public class ArticleController {
 	}
 
 //	게시글 리스트 메서드
-	public void showList(String cmd) {
+	public void showList() {
 		if (articles.isEmpty()) {
 			System.out.println("[❌] 게시글이 존재하지 않습니다.");
 			return;
@@ -82,7 +87,7 @@ public class ArticleController {
 		// 게시글 검색 기능
 		List<Article> forPrintArticles = articles;
 
-		String searchKeyword = cmd.substring("list".length()).trim();
+		String searchKeyword = cmd.substring("article list".length()).trim();
 
 		if (searchKeyword.length() > 0) {
 			System.out.println("검색어 : " + searchKeyword);
@@ -105,14 +110,15 @@ public class ArticleController {
 
 		for (int i = forPrintArticles.size() - 1; i >= 0; i--) {
 			Article article = forPrintArticles.get(i);
-			System.out.printf("%d		|		%s		|		%s		|		%s\n", article.id, article.title, article.regDate.substring(0, 10), article.viewCnt);
+			System.out.printf("%d		|		%s		|		%s		|		%s\n", article.id, article.title,
+					article.regDate.substring(0, 10), article.viewCnt);
 		}
 	}
 
 //	게시글 상세 정보 메서드
-	public void showDetail(String cmd) {
+	public void showDetail() {
 		String[] cmdBits = cmd.split(" ");
-		int id = Integer.parseInt(cmdBits[1]);
+		int id = Integer.parseInt(cmdBits[2]);
 
 		Article foundArticle = getArticleById(id);
 
@@ -140,5 +146,5 @@ public class ArticleController {
 
 		return null;
 	}
-
+	
 }
