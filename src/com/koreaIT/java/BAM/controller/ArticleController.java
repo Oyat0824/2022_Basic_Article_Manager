@@ -13,11 +13,11 @@ public class ArticleController extends Controller {
 	String cmd;
 
 //	생성자
-	public ArticleController(List<Article> articles, Scanner sc) {
-		this.articles = articles;
+	public ArticleController(Scanner sc) {
+		this.articles = new ArrayList<>();
 		this.sc = sc;
 	}
-
+	
 	@Override
 	public void doAction(String cmd, String methodName) {
 		this.cmd = cmd;
@@ -44,7 +44,7 @@ public class ArticleController extends Controller {
 	}
 
 //	게시글 작성 메서드
-	public void doWrite() {
+	private void doWrite() {
 		int id = articles.size() + 1;
 		String regDate = Util.getNowDataStr();
 
@@ -60,7 +60,7 @@ public class ArticleController extends Controller {
 	}
 
 //	게시글 수정 메서드
-	public void doModify() {
+	private void doModify() {
 		String[] cmdBits = cmd.split(" ");
 		int id = Integer.parseInt(cmdBits[2]);
 
@@ -82,7 +82,7 @@ public class ArticleController extends Controller {
 	}
 
 //	게시글 삭제 메서드
-	public void doDelete() {
+	private void doDelete() {
 		String[] cmdBits = cmd.split(" ");
 		int id = Integer.parseInt(cmdBits[2]);
 
@@ -98,7 +98,7 @@ public class ArticleController extends Controller {
 	}
 
 //	게시글 리스트 메서드
-	public void showList() {
+	private void showList() {
 		if (articles.isEmpty()) {
 			System.out.println("[❌] 게시글이 존재하지 않습니다.");
 			return;
@@ -127,7 +127,7 @@ public class ArticleController extends Controller {
 		}
 
 		System.out.println("번호		|		제목		|		작성일			|		조회수");
-
+		System.out.println("----------------|-------------------------------|---------------------------------------|----------------------");
 		for (int i = forPrintArticles.size() - 1; i >= 0; i--) {
 			Article article = forPrintArticles.get(i);
 			System.out.printf("%d		|		%s		|		%s		|		%s\n", article.id, article.title,
@@ -136,7 +136,7 @@ public class ArticleController extends Controller {
 	}
 
 //	게시글 상세 정보 메서드
-	public void showDetail() {
+	private void showDetail() {
 		String[] cmdBits = cmd.split(" ");
 		
 		if(cmdBits.length < 3) {
@@ -171,6 +171,16 @@ public class ArticleController extends Controller {
 		}
 
 		return null;
+	}
+	
+	/**
+	 * 테스트를 위한 게시물을 생성하는 메서드
+	 */
+	public void makeTestData() {
+		System.out.println(">> 테스트를 위한 게시물 데이터를 생성합니다.\n");
+		articles.add(new Article(1, Util.getNowDataStr(), "제목 1", "내용 1", 111));
+		articles.add(new Article(2, Util.getNowDataStr(), "제목 2", "내용 2", 222));
+		articles.add(new Article(3, Util.getNowDataStr(), "제목 3", "내용 3", 333));
 	}
 
 }
