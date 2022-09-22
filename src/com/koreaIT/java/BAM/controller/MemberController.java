@@ -9,18 +9,27 @@ import com.koreaIT.java.BAM.util.Util;
 public class MemberController extends Controller {
 	List<Member> members;
 	Scanner sc;
+	String cmd;
 
 //	생성자
 	public MemberController(List<Member> members, Scanner sc) {
 		this.members = members;
 		this.sc = sc;
 	}
-	
+
 	@Override
-	public void doAction(String cmd) {
-		
+	public void doAction(String cmd, String methodName) {
+		this.cmd = cmd;
+
+		switch (methodName.toLowerCase()) {
+		case "join":
+			doJoin();
+			break;
+		default:
+			System.out.println("[❌] 존재하지 않는 명령어 입니다.");
+		}
 	}
-	
+
 //	회원가입 메서드
 	public void doJoin() {
 		int id = members.size() + 1;

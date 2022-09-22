@@ -17,10 +17,30 @@ public class ArticleController extends Controller {
 		this.articles = articles;
 		this.sc = sc;
 	}
-	
+
 	@Override
-	public void doAction(String cmd) {
+	public void doAction(String cmd, String methodName) {
 		this.cmd = cmd;
+
+		switch (methodName.toLowerCase()) {
+			case "write":
+				doWrite();
+				break;
+			case "modify":
+				doModify();
+				break;
+			case "delete":
+				doDelete();
+				break;
+			case "list":
+				showList();
+				break;
+			case "detail":
+				showDetail();
+				break;
+			default:
+				System.out.println("[❌] 존재하지 않는 명령어 입니다.");
+		}
 	}
 
 //	게시글 작성 메서드
@@ -118,6 +138,12 @@ public class ArticleController extends Controller {
 //	게시글 상세 정보 메서드
 	public void showDetail() {
 		String[] cmdBits = cmd.split(" ");
+		
+		if(cmdBits.length < 3) {
+			System.out.printf("[❌] 게시글 번호를 입력해주세요.\n");
+			return;
+		}
+		
 		int id = Integer.parseInt(cmdBits[2]);
 
 		Article foundArticle = getArticleById(id);
@@ -146,5 +172,5 @@ public class ArticleController extends Controller {
 
 		return null;
 	}
-	
+
 }

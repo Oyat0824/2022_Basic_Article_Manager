@@ -37,26 +37,26 @@ public class App {
 			System.out.printf("명령어 ) ");
 			String cmd = sc.nextLine().trim();
 
-//			프로그램 종료
-			if (cmd.equals("exit")) {
-				break;
-			}
-
 //			명령어를 입력 안했을 경우
 			if (cmd.equals("")) {
 				System.out.println("[❌] 명령어를 입력해주세요.");
 				continue;
 			}
+			
+//			프로그램 종료
+			if (cmd.equals("exit")) {
+				break;
+			}
 
-			String[] cmdBits = cmd.split(" ");		// article list
+			String[] cmdBits = cmd.split(" ");
 			
 			if(cmdBits.length == 1) {
 				System.out.println("[❌] 명령어를 확인해주세요.");
 				continue;
 			}
 			
-			String controllerName = cmdBits[0];		// article
-			String methodName = cmdBits[1];			// list
+			String controllerName = cmdBits[0];
+			String methodName = cmdBits[1];
 			
 			Controller controller = null;
 			
@@ -69,36 +69,7 @@ public class App {
 				continue;
 			}
 			
-			controller.doAction(cmd);
-			
-////			회원가입 기능
-//			if (cmd.equals("member join")) {
-//				memberController.doJoin();
-//				
-////			게시글 작성
-//			} else if (cmd.equals("article write")) {
-//				articleController.doWrite();
-//				
-////			게시글 리스트
-//			} else if (cmd.startsWith("article list")) {
-//				articleController.showList();
-//				
-////			게시글 내용 확인
-//			} else if (cmd.startsWith("article detail ")) {
-//				articleController.showDetail();
-//				
-////			게시글 삭제
-//			} else if (cmd.startsWith("article delete ")) {
-//				articleController.doDelete();
-//				
-////			게시글 수정
-//			} else if (cmd.startsWith("article modify ")) {
-//				articleController.doModify();
-//				
-////			존재하지 않는 명령어
-//			} else {
-//				System.out.println("[❌] 존재하지 않는 명령어 입니다.");
-//			}
+			controller.doAction(cmd, methodName);
 		}
 
 		System.out.println("== 프로그램 끝 ==");
