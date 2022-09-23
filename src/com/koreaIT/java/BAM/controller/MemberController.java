@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import com.koreaIT.java.BAM.dto.Article;
 import com.koreaIT.java.BAM.dto.Member;
 import com.koreaIT.java.BAM.util.Util;
 
@@ -31,13 +30,19 @@ public class MemberController extends Controller {
 		case "login":
 			doLogin();
 			break;
+		case "profile":
+			showProfile();
+			break;
+		case "logout":
+			doLogout();
+			break;
 		default:
 			System.out.println("[❌] 존재하지 않는 명령어 입니다.");
 			break;
 		}
 	}
 
-//	회원가입 메서드
+	//	회원가입 메서드
 	private void doJoin() {
 		int id = members.size() + 1;
 		String regDate = Util.getNowDateStr();
@@ -97,6 +102,11 @@ public class MemberController extends Controller {
 
 //	로그인 메서드
 	private void doLogin() {
+		if(isLogined()) {
+			System.out.println("[❌] 이미 로그인 상태입니다.");
+			return;
+		}
+		
 		System.out.printf("로그인 아이디 : ");
 		String loginId = sc.nextLine();
 		System.out.printf("로그인 비밀번호 : ");
@@ -123,14 +133,36 @@ public class MemberController extends Controller {
 			return;
 		}
 		
-		this.loginedMember = member;
-		if(loginedMember.loginId.equals("admin")) {
-			System.out.printf("[✔️] 관리자님 어서오십시오.\n", loginedMember.loginId);
-		} else {
-			System.out.printf("[✔️] [ %s ] 회원님 환영합니다!\n", loginedMember.loginId);
+		loginedMember = member;
+		System.out.printf("[✔️] [ %s ]님 환영합니다!\n", loginedMember.name);
+	}
+	
+//	로그아웃 기능 메서드
+	private void doLogout() {
+		if(isLogined() == false) {
+			System.out.println("[❌] 로그인을 먼저 해주세요!");
+			return;
 		}
+		
+		loginedMember = null;
+		System.out.println("[✔️] 로그아웃 되었습니다.");
+	}
+	
+//	프로필 보기 메서드
+	private void showProfile() {
+		if(isLogined() == false) {
+			System.out.println("[❌] 로그인을 먼저 해주세요!");
+			return;
+		}
+		
+		System.out.println("== 내 정보 ==");
+		System.out.printf("> 로그인 아이디 : %s\n", loginedMember.loginId);
+		System.out.printf("> 이름 : %s\n", loginedMember.name);
 	}
 
+	
+// ----------------------------------------------------------------------------------- 
+	
 //	로그인 아이디에 따른 멤버 정보 가져오기
 	private Member getMemberByLoginId(String loginId) {
 		for (Member member : members) {
@@ -152,6 +184,11 @@ public class MemberController extends Controller {
 		}
 		// 아니면 말고
 		return false;
+	}
+
+//	로그인 체크 메서드
+	private boolean isLogined() {
+		return loginedMember != null;
 	}
 
 	/**
