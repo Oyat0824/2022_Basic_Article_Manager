@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.koreaIT.java.BAM.dto.Article;
 import com.koreaIT.java.BAM.dto.Member;
 import com.koreaIT.java.BAM.util.Util;
 
@@ -39,7 +40,7 @@ public class MemberController extends Controller {
 //	회원가입 메서드
 	private void doJoin() {
 		int id = members.size() + 1;
-		String regDate = Util.getNowDataStr();
+		String regDate = Util.getNowDateStr();
 
 		// 아이디 조건 루프
 		String loginId = null;
@@ -122,8 +123,12 @@ public class MemberController extends Controller {
 			return;
 		}
 		
-		loginedMember = member;
-		System.out.printf("[✔️] [ %s ] 회원님 환영합니다!\n", loginedMember.loginId);
+		this.loginedMember = member;
+		if(loginedMember.loginId.equals("admin")) {
+			System.out.printf("[✔️] 관리자님 어서오십시오.\n", loginedMember.loginId);
+		} else {
+			System.out.printf("[✔️] [ %s ] 회원님 환영합니다!\n", loginedMember.loginId);
+		}
 	}
 
 //	로그인 아이디에 따른 멤버 정보 가져오기
@@ -149,4 +154,14 @@ public class MemberController extends Controller {
 		return false;
 	}
 
+	/**
+	 * 테스트를 위한 유저를 생성하는 메서드
+	 */
+	public void makeTestData() {
+		System.out.println(">> 테스트를 위한 회원 데이터를 생성합니다.");
+		members.add(new Member(1, Util.getNowDateStr(), "admin", "admin", "관리자"));
+		members.add(new Member(2, Util.getNowDateStr(), "test", "test", "테스트"));
+		members.add(new Member(3, Util.getNowDateStr(), "user", "user", "유저"));
+
+	}
 }

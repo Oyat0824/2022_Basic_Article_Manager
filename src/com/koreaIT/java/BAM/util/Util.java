@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 
 public class Util {
 	// 현재 날짜와 시간 리턴
-	public static String getNowDataStr() {
+	public static String getNowDateStr() {
 		// 현재 날짜/시간
 		LocalDateTime now = LocalDateTime.now();
 
