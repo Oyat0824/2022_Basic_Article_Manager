@@ -8,9 +8,9 @@ import com.koreaIT.java.BAM.dto.Article;
 import com.koreaIT.java.BAM.util.Util;
 
 public class ArticleController extends Controller {
-	List<Article> articles;
-	Scanner sc;
-	String cmd;
+	private List<Article> articles;
+	private Scanner sc;
+	private String cmd;
 
 //	생성자
 	public ArticleController(Scanner sc) {
@@ -40,6 +40,7 @@ public class ArticleController extends Controller {
 				break;
 			default:
 				System.out.println("[❌] 존재하지 않는 명령어 입니다.");
+				break;
 		}
 	}
 

@@ -8,9 +8,10 @@ import com.koreaIT.java.BAM.dto.Member;
 import com.koreaIT.java.BAM.util.Util;
 
 public class MemberController extends Controller {
-	List<Member> members;
-	Scanner sc;
-	String cmd;
+	private List<Member> members;
+	private Scanner sc;
+	private Member loginedMember;
+	private String cmd;
 
 //	생성자
 	public MemberController(Scanner sc) {
@@ -26,13 +27,17 @@ public class MemberController extends Controller {
 		case "join":
 			doJoin();
 			break;
+		case "login":
+			doLogin();
+			break;
 		default:
 			System.out.println("[❌] 존재하지 않는 명령어 입니다.");
+			break;
 		}
 	}
 
 //	회원가입 메서드
-	public void doJoin() {
+	private void doJoin() {
 		int id = members.size() + 1;
 		String regDate = Util.getNowDataStr();
 
@@ -40,7 +45,7 @@ public class MemberController extends Controller {
 		String loginId = null;
 
 		while (true) {
-			System.out.printf("로그인할 아이디 : ");
+			System.out.printf("가입 아이디 : ");
 			loginId = sc.nextLine();
 
 			if (loginId.isEmpty()) {
@@ -48,7 +53,7 @@ public class MemberController extends Controller {
 				continue;
 			}
 
-			if (loginIdChk(loginId)) {
+			if (isLoginIdChk(loginId)) {
 				System.out.printf("[❌] 해당 아이디 < %s > 는 이미 사용중인 아이디입니다.\n", loginId);
 				continue;
 			}
@@ -62,7 +67,7 @@ public class MemberController extends Controller {
 		String loginPwChk = null;
 
 		while (true) {
-			System.out.printf("로그인할 비밀번호 : ");
+			System.out.printf("가입 비밀번호 : ");
 			loginPw = sc.nextLine();
 			System.out.printf("비밀번호 확인 : ");
 			loginPwChk = sc.nextLine();
@@ -89,8 +94,51 @@ public class MemberController extends Controller {
 		System.out.printf("[✔️] [ %s ] 회원님 가입을 축하드립니다!\n", loginId);
 	}
 
+//	로그인 메서드
+	private void doLogin() {
+		System.out.printf("로그인 아이디 : ");
+		String loginId = sc.nextLine();
+		System.out.printf("로그인 비밀번호 : ");
+		String loginPw = sc.nextLine();
+		
+		// 아이디/비밀번호 공란일 경우
+		if(loginId.isEmpty()) {
+			System.out.println("[❌] 아이디를 입력해주세요.");
+			return;
+		} else if(loginPw.isEmpty()) {
+			System.out.println("[❌] 비밀번호를 입력해주세요.");
+			return;
+		}
+		
+		Member member = getMemberByLoginId(loginId);
+		
+		if(member == null) {
+			System.out.println("[❌] 해당 아이디는 존재하지 않습니다.");
+			return;
+		}
+		
+		if(member.loginPw.equals(loginPw) == false) {
+			System.out.println("[❌] 비밀번호를 확인해주세요.");
+			return;
+		}
+		
+		loginedMember = member;
+		System.out.printf("[✔️] [ %s ] 회원님 환영합니다!\n", loginedMember.loginId);
+	}
+
+//	로그인 아이디에 따른 멤버 정보 가져오기
+	private Member getMemberByLoginId(String loginId) {
+		for (Member member : members) {
+			if(member.loginId.equals(loginId)) {
+				return member;
+			}
+		}
+		
+		return null;
+	}
+
 //	아이디 중복 체크 메서드
-	private boolean loginIdChk(String loginId) {
+	private boolean isLoginIdChk(String loginId) {
 		// 아이디가 중복인 경우
 		for (Member member : members) {
 			if (member.loginId.equals(loginId)) {
