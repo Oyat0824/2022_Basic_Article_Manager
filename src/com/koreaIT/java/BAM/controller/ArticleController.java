@@ -33,9 +33,19 @@ public class ArticleController extends Controller {
 			doWrite();
 			break;
 		case "modify":
+			if (isLogined() == false) {
+				System.out.println("[❌] 로그인을 먼저 해주세요!");
+				break;
+			}
+			
 			doModify();
 			break;
 		case "delete":
+			if (isLogined() == false) {
+				System.out.println("[❌] 로그인을 먼저 해주세요!");
+				break;
+			}
+			
 			doDelete();
 			break;
 		case "list":
@@ -77,6 +87,11 @@ public class ArticleController extends Controller {
 			System.out.printf("[❌] %d번 게시물이 존재하지 않습니다.\n", id);
 			return;
 		}
+		
+		if (foundArticle.memberId != loginedMember.id) {
+			System.out.printf("[❌] 권한이 없습니다.\n");
+			return;
+		}
 
 		System.out.printf("수정할 제목 : ");
 		String title = sc.nextLine();
@@ -97,6 +112,11 @@ public class ArticleController extends Controller {
 
 		if (foundArticle == null) {
 			System.out.printf("[❌] %d번 게시물이 존재하지 않습니다.\n", id);
+			return;
+		}
+		
+		if (foundArticle.memberId != loginedMember.id) {
+			System.out.printf("[❌] 권한이 없습니다.\n");
 			return;
 		}
 
