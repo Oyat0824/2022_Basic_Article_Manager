@@ -10,8 +10,6 @@ import com.koreaIT.java.BAM.util.Util;
 public class MemberController extends Controller {
 	private List<Member> members;
 	private Scanner sc;
-	private Member loginedMember;
-	private String cmd;
 
 //	생성자
 	public MemberController(Scanner sc) {
@@ -19,10 +17,9 @@ public class MemberController extends Controller {
 		this.sc = sc;
 	}
 
+//	명령어 분기 실행문
 	@Override
 	public void doAction(String cmd, String methodName) {
-		this.cmd = cmd;
-
 		switch (methodName.toLowerCase()) {
 		case "join":
 			doJoin();
@@ -186,14 +183,10 @@ public class MemberController extends Controller {
 		return false;
 	}
 
-//	로그인 체크 메서드
-	private boolean isLogined() {
-		return loginedMember != null;
-	}
-
 	/**
 	 * 테스트를 위한 유저를 생성하는 메서드
 	 */
+	@Override
 	public void makeTestData() {
 		System.out.println(">> 테스트를 위한 회원 데이터를 생성합니다.");
 		members.add(new Member(1, Util.getNowDateStr(), "admin", "admin", "관리자"));

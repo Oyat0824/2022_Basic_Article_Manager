@@ -18,12 +18,18 @@ public class ArticleController extends Controller {
 		this.sc = sc;
 	}
 	
+//	명령어 분기 실행문
 	@Override
 	public void doAction(String cmd, String methodName) {
 		this.cmd = cmd;
 
 		switch (methodName.toLowerCase()) {
 			case "write":
+				if(isLogined() == false) {
+					System.out.println("[❌] 로그인을 먼저 해주세요!");
+					break;
+				} 
+
 				doWrite();
 				break;
 			case "modify":
@@ -177,6 +183,7 @@ public class ArticleController extends Controller {
 	/**
 	 * 테스트를 위한 게시물을 생성하는 메서드
 	 */
+	@Override
 	public void makeTestData() {
 		System.out.println(">> 테스트를 위한 게시물 데이터를 생성합니다.");
 		articles.add(new Article(1, Util.getNowDateStr(), "제목 1", "내용 1", 111));
