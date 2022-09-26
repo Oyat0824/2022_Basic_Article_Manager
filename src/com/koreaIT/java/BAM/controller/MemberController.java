@@ -183,9 +183,7 @@ public class MemberController extends Controller {
 		return false;
 	}
 
-	/**
-	 * 테스트를 위한 유저를 생성하는 메서드
-	 */
+//	테스트 데이터 생성
 	@Override
 	public void makeTestData() {
 		System.out.println(">> 테스트를 위한 회원 데이터를 생성합니다.");

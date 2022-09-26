@@ -17,36 +17,36 @@ public class ArticleController extends Controller {
 		this.articles = new ArrayList<>();
 		this.sc = sc;
 	}
-	
+
 //	명령어 분기 실행문
 	@Override
 	public void doAction(String cmd, String methodName) {
 		this.cmd = cmd;
 
 		switch (methodName.toLowerCase()) {
-			case "write":
-				if(isLogined() == false) {
-					System.out.println("[❌] 로그인을 먼저 해주세요!");
-					break;
-				} 
+		case "write":
+			if (isLogined() == false) {
+				System.out.println("[❌] 로그인을 먼저 해주세요!");
+				break;
+			}
 
-				doWrite();
-				break;
-			case "modify":
-				doModify();
-				break;
-			case "delete":
-				doDelete();
-				break;
-			case "list":
-				showList();
-				break;
-			case "detail":
-				showDetail();
-				break;
-			default:
-				System.out.println("[❌] 존재하지 않는 명령어 입니다.");
-				break;
+			doWrite();
+			break;
+		case "modify":
+			doModify();
+			break;
+		case "delete":
+			doDelete();
+			break;
+		case "list":
+			showList();
+			break;
+		case "detail":
+			showDetail();
+			break;
+		default:
+			System.out.println("[❌] 존재하지 않는 명령어 입니다.");
+			break;
 		}
 	}
 
@@ -60,7 +60,7 @@ public class ArticleController extends Controller {
 		System.out.printf("내용 : ");
 		String body = sc.nextLine();
 
-		Article article = new Article(id, regDate, title, body);
+		Article article = new Article(id, regDate, loginedMember.id, title, body);
 		articles.add(article);
 
 		System.out.printf("[✔️] %d번 글이 생성되었습니다.\n", id);
@@ -133,24 +133,22 @@ public class ArticleController extends Controller {
 			}
 		}
 
-		System.out.println("번호		|		제목		|		작성일			|		조회수");
-		System.out.println("----------------|-------------------------------|---------------------------------------|----------------------");
+		System.out.println("번호		|		제목		|		작성자		|		작성일			|		조회수");
 		for (int i = forPrintArticles.size() - 1; i >= 0; i--) {
 			Article article = forPrintArticles.get(i);
-			System.out.printf("%d		|		%s		|		%s		|		%s\n", article.id, article.title,
-					article.regDate.substring(0, 10), article.viewCnt);
+			System.out.printf("%d		|		%s		|		%s		|		%s		|		%s\n", article.id, article.title, article.memberId, article.regDate.substring(0, 10), article.viewCnt);
 		}
 	}
 
 //	게시글 상세 정보 메서드
 	private void showDetail() {
 		String[] cmdBits = cmd.split(" ");
-		
-		if(cmdBits.length < 3) {
+
+		if (cmdBits.length < 3) {
 			System.out.printf("[❌] 게시글 번호를 입력해주세요.\n");
 			return;
 		}
-		
+
 		int id = Integer.parseInt(cmdBits[2]);
 
 		Article foundArticle = getArticleById(id);
@@ -159,12 +157,13 @@ public class ArticleController extends Controller {
 			System.out.printf("[❌] %d번 게시물이 존재하지 않습니다.\n", id);
 			return;
 		}
-
+		
 		foundArticle.addViewCnt();
 
 		System.out.println("번호 : " + foundArticle.id);
 		System.out.println("날짜 : " + foundArticle.regDate);
-		System.out.println("조회 : " + foundArticle.viewCnt);
+		System.out.println("작성자 : " + foundArticle.memberId);
+		System.out.println("조회수 : " + foundArticle.viewCnt);
 		System.out.println("제목 : " + foundArticle.title);
 		System.out.println("내용 : " + foundArticle.body);
 	}
@@ -179,16 +178,14 @@ public class ArticleController extends Controller {
 
 		return null;
 	}
-	
-	/**
-	 * 테스트를 위한 게시물을 생성하는 메서드
-	 */
+
+//	테스트 데이터 생성
 	@Override
 	public void makeTestData() {
 		System.out.println(">> 테스트를 위한 게시물 데이터를 생성합니다.");
-		articles.add(new Article(1, Util.getNowDateStr(), "제목 1", "내용 1", 111));
-		articles.add(new Article(2, Util.getNowDateStr(), "제목 2", "내용 2", 222));
-		articles.add(new Article(3, Util.getNowDateStr(), "제목 3", "내용 3", 333));
+		articles.add(new Article(1, Util.getNowDateStr(), 1, "제목 1", "내용 1", 111));
+		articles.add(new Article(2, Util.getNowDateStr(), 2, "제목 2", "내용 2", 222));
+		articles.add(new Article(3, Util.getNowDateStr(), 2, "제목 3", "내용 3", 333));
 	}
 
 }
