@@ -194,9 +194,7 @@ public class ArticleController extends Controller {
 
 //	작성자 이름 반환
 	private String getWriterName(Article article) {
-		List<Member> members = Container.memberDao.members;
-		
-		for(Member member : members) {
+		for(Member member : Container.memberDao.members) {
 			if(article.memberId == member.id) {
 				return member.name;
 			}
