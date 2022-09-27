@@ -23,29 +23,14 @@ public class ArticleController extends Controller {
 	public void doAction(String cmd, String methodName) {
 		this.cmd = cmd;
 
-		switch (methodName.toLowerCase()) {
+		switch (methodName) {
 		case "write":
-			if (isLogined() == false) {
-				System.out.println("[❌] 로그인을 먼저 해주세요!");
-				break;
-			}
-
 			doWrite();
 			break;
 		case "modify":
-			if (isLogined() == false) {
-				System.out.println("[❌] 로그인을 먼저 해주세요!");
-				break;
-			}
-			
 			doModify();
 			break;
 		case "delete":
-			if (isLogined() == false) {
-				System.out.println("[❌] 로그인을 먼저 해주세요!");
-				break;
-			}
-			
 			doDelete();
 			break;
 		case "list":

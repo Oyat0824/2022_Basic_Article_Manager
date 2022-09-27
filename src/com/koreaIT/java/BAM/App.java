@@ -11,11 +11,11 @@ public class App {
 		System.out.println("== 프로그램 시작 ==");
 
 		Scanner sc = new Scanner(System.in);
-	
+
 //		컨트롤러 객체 생성
 		MemberController memberController = new MemberController(sc);
 		ArticleController articleController = new ArticleController(sc);
-		
+
 //		테스트 데이터 생성
 		articleController.makeTestData();
 		memberController.makeTestData();
@@ -30,39 +30,62 @@ public class App {
 				System.out.println("[❌] 명령어를 입력해주세요.");
 				continue;
 			}
-			
+
 //			프로그램 종료
 			if (cmd.equals("exit")) {
 				break;
 			}
 
 			String[] cmdBits = cmd.split(" ");
-			
-			if(cmdBits.length == 1) {
+
+			if (cmdBits.length == 1) {
 				System.out.println("[❌] 명령어를 확인해주세요.");
 				continue;
 			}
-			
+
 			String controllerName = cmdBits[0];
 			String methodName = cmdBits[1];
-			
+
 			Controller controller = null;
-			
-			if(controllerName.equals("member")) {
+
+			if (controllerName.equals("member")) {
 				controller = memberController;
-			} else if(controllerName.equals("article")) {
+			} else if (controllerName.equals("article")) {
 				controller = articleController;
 			} else {
 				System.out.println("[❌] 존재하지 않는 명령어 입니다.");
 				continue;
 			}
-			
+
+			// 구별이 필요할 때 사용
+//			String actionName = controllerName + "/" + methodName;
+
+			switch (methodName) {
+			case "write":
+			case "modify":
+			case "delete":
+			case "profile":
+			case "logout":
+				if (Controller.isLogined() == false) {
+					System.out.println("[❌] 로그인을 먼저 해주세요!");
+					continue;
+				}
+				break;
+
+			case "join":
+			case "login":
+				if (Controller.isLogined()) {
+					System.out.println("[❌] 이미 로그인 상태입니다.");
+					continue;
+				}
+				break;
+			}
+
 			controller.doAction(cmd, methodName);
 		}
 
 		System.out.println("== 프로그램 끝 ==");
 		sc.close();
 	}
-
 
 }

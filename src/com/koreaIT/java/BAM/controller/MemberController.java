@@ -20,7 +20,7 @@ public class MemberController extends Controller {
 //	명령어 분기 실행문
 	@Override
 	public void doAction(String cmd, String methodName) {
-		switch (methodName.toLowerCase()) {
+		switch (methodName) {
 		case "join":
 			doJoin();
 			break;
@@ -99,11 +99,6 @@ public class MemberController extends Controller {
 
 //	로그인 메서드
 	private void doLogin() {
-		if(isLogined()) {
-			System.out.println("[❌] 이미 로그인 상태입니다.");
-			return;
-		}
-		
 		System.out.printf("로그인 아이디 : ");
 		String loginId = sc.nextLine();
 		System.out.printf("로그인 비밀번호 : ");
@@ -136,22 +131,12 @@ public class MemberController extends Controller {
 	
 //	로그아웃 기능 메서드
 	private void doLogout() {
-		if(isLogined() == false) {
-			System.out.println("[❌] 로그인을 먼저 해주세요!");
-			return;
-		}
-		
 		loginedMember = null;
 		System.out.println("[✔️] 로그아웃 되었습니다.");
 	}
 	
 //	프로필 보기 메서드
 	private void showProfile() {
-		if(isLogined() == false) {
-			System.out.println("[❌] 로그인을 먼저 해주세요!");
-			return;
-		}
-		
 		System.out.println("== 내 정보 ==");
 		System.out.printf("> 로그인 아이디 : %s\n", loginedMember.loginId);
 		System.out.printf("> 이름 : %s\n", loginedMember.name);
