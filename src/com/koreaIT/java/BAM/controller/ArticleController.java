@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.koreaIT.java.BAM.container.Container;
 import com.koreaIT.java.BAM.dto.Article;
+import com.koreaIT.java.BAM.dto.Member;
 import com.koreaIT.java.BAM.util.Util;
 
 public class ArticleController extends Controller {
@@ -14,7 +16,7 @@ public class ArticleController extends Controller {
 
 //	생성자
 	public ArticleController(Scanner sc) {
-		this.articles = new ArrayList<>();
+		this.articles = Container.articleDao.articles;
 		this.sc = sc;
 	}
 
@@ -137,11 +139,15 @@ public class ArticleController extends Controller {
 				return;
 			}
 		}
+		
+		
 
 		System.out.println("번호		|		제목		|		작성자		|		작성일			|		조회수");
 		for (int i = forPrintArticles.size() - 1; i >= 0; i--) {
 			Article article = forPrintArticles.get(i);
-			System.out.printf("%d		|		%s		|		%s		|		%s		|		%s\n", article.id, article.title, article.memberId, article.regDate.substring(0, 10), article.viewCnt);
+			String WriterName = getWriterName(article);
+			
+			System.out.printf("%d		|		%s		|		%s		|		%s		|		%s\n", article.id, article.title, WriterName, article.regDate.substring(0, 10), article.viewCnt);
 		}
 	}
 
@@ -163,11 +169,13 @@ public class ArticleController extends Controller {
 			return;
 		}
 		
+		String WriterName = getWriterName(foundArticle);
+		
 		foundArticle.addViewCnt();
 
 		System.out.println("번호 : " + foundArticle.id);
 		System.out.println("날짜 : " + foundArticle.regDate);
-		System.out.println("작성자 : " + foundArticle.memberId);
+		System.out.println("작성자 : " + WriterName);
 		System.out.println("조회수 : " + foundArticle.viewCnt);
 		System.out.println("제목 : " + foundArticle.title);
 		System.out.println("내용 : " + foundArticle.body);
@@ -184,6 +192,19 @@ public class ArticleController extends Controller {
 		return null;
 	}
 
+//	작성자 이름 반환
+	private String getWriterName(Article article) {
+		List<Member> members = Container.memberDao.members;
+		
+		for(Member member : members) {
+			if(article.memberId == member.id) {
+				return member.name;
+			}
+		}
+		
+		return "이름없음";
+	}
+	
 //	테스트 데이터 생성
 	@Override
 	public void makeTestData() {
