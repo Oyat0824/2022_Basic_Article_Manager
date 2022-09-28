@@ -1,6 +1,5 @@
 package com.koreaIT.java.BAM.controller;
 
-import java.util.List;
 import java.util.Scanner;
 
 import com.koreaIT.java.BAM.container.Container;
@@ -8,12 +7,10 @@ import com.koreaIT.java.BAM.dto.Member;
 import com.koreaIT.java.BAM.util.Util;
 
 public class MemberController extends Controller {
-	private List<Member> members;
 	private Scanner sc;
 
 //	생성자
 	public MemberController(Scanner sc) {
-		this.members = Container.memberDao.members;
 		this.sc = sc;
 	}
 
@@ -41,7 +38,7 @@ public class MemberController extends Controller {
 
 	//	회원가입 메서드
 	private void doJoin() {
-		int id = Container.memberDao.getNewId();
+		int id = Container.memberService.getNewId();
 		String regDate = Util.getNowDateStr();
 
 		// 아이디 조건 루프
@@ -56,7 +53,7 @@ public class MemberController extends Controller {
 				continue;
 			}
 
-			if (isLoginIdChk(loginId)) {
+			if (Container.memberService.isLoginIdChk(loginId)) {
 				System.out.printf("[❌] 해당 아이디 < %s > 는 이미 사용중인 아이디입니다.\n", loginId);
 				continue;
 			}
@@ -92,7 +89,7 @@ public class MemberController extends Controller {
 		String name = sc.nextLine();
 
 		Member member = new Member(id, regDate, loginId, loginPw, name);
-		Container.memberDao.add(member);
+		Container.memberService.add(member);
 
 		System.out.printf("[✔️] [ %s ] 회원님 가입을 축하드립니다!\n", loginId);
 	}
@@ -125,7 +122,7 @@ public class MemberController extends Controller {
 				break;
 			}
 			
-			member = getMemberByLoginId(loginId);
+			member = Container.memberService.getMemberByLoginId(loginId);
 			
 			if(member == null) {
 				System.out.println("[❌] 해당 아이디는 존재하지 않습니다.");
@@ -161,28 +158,6 @@ public class MemberController extends Controller {
 	
 // ----------------------------------------------------------------------------------- 
 	
-//	로그인 아이디에 따른 멤버 정보 가져오기
-	private Member getMemberByLoginId(String loginId) {
-		for (Member member : members) {
-			if(member.loginId.equals(loginId)) {
-				return member;
-			}
-		}
-		
-		return null;
-	}
-
-//	아이디 중복 체크 메서드
-	private boolean isLoginIdChk(String loginId) {
-		// 아이디가 중복인 경우
-		for (Member member : members) {
-			if (member.loginId.equals(loginId)) {
-				return true;
-			}
-		}
-		// 아니면 말고
-		return false;
-	}
 
 //	테스트 데이터 생성
 	@Override
