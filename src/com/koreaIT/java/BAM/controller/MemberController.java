@@ -49,7 +49,7 @@ public class MemberController extends Controller {
 
 		while (true) {
 			System.out.printf("가입 아이디 : ");
-			loginId = sc.nextLine();
+			loginId = sc.nextLine().trim();
 
 			if (loginId.isEmpty()) {
 				System.out.println("[❌] 아이디를 입력해주세요.");
@@ -71,9 +71,9 @@ public class MemberController extends Controller {
 
 		while (true) {
 			System.out.printf("가입 비밀번호 : ");
-			loginPw = sc.nextLine();
+			loginPw = sc.nextLine().trim();
 			System.out.printf("비밀번호 확인 : ");
-			loginPwChk = sc.nextLine();
+			loginPwChk = sc.nextLine().trim();
 
 			if (loginPw.isEmpty()) {
 				System.out.println("[❌] 비밀번호를 입력해주세요.");
@@ -99,32 +99,47 @@ public class MemberController extends Controller {
 
 //	로그인 메서드
 	private void doLogin() {
-		System.out.printf("로그인 아이디 : ");
-		String loginId = sc.nextLine();
-		System.out.printf("로그인 비밀번호 : ");
-		String loginPw = sc.nextLine();
 		
-		// 아이디/비밀번호 공란일 경우
-		if(loginId.isEmpty()) {
-			System.out.println("[❌] 아이디를 입력해주세요.");
-			return;
-		} else if(loginPw.isEmpty()) {
-			System.out.println("[❌] 비밀번호를 입력해주세요.");
-			return;
+		Member member = null;
+		String loginId = null;
+		String loginPw = null;
+		
+		while(true) {
+			System.out.printf("로그인 아이디 : ");
+			loginId = sc.nextLine().trim();
+			
+			if(loginId.isEmpty()) {
+				System.out.println("[❌] 아이디를 입력해주세요.");
+				continue;
+			}
+			
+			while(true) {
+				System.out.printf("로그인 비밀번호 : ");
+				loginPw = sc.nextLine().trim();	
+				
+				if(loginPw.isEmpty()) {
+					System.out.println("[❌] 비밀번호를 입력해주세요.");
+					continue;
+				}
+				
+				break;
+			}
+			
+			member = getMemberByLoginId(loginId);
+			
+			if(member == null) {
+				System.out.println("[❌] 해당 아이디는 존재하지 않습니다.");
+				return;
+			}
+			
+			if(member.loginPw.equals(loginPw) == false) {
+				System.out.println("[❌] 비밀번호를 확인해주세요.");
+				return;
+			}
+			
+			break;
 		}
-		
-		Member member = getMemberByLoginId(loginId);
-		
-		if(member == null) {
-			System.out.println("[❌] 해당 아이디는 존재하지 않습니다.");
-			return;
-		}
-		
-		if(member.loginPw.equals(loginPw) == false) {
-			System.out.println("[❌] 비밀번호를 확인해주세요.");
-			return;
-		}
-		
+
 		loginedMember = member;
 		System.out.printf("[✔️] [ %s ]님 환영합니다!\n", loginedMember.name);
 	}
@@ -138,6 +153,7 @@ public class MemberController extends Controller {
 //	프로필 보기 메서드
 	private void showProfile() {
 		System.out.println("== 내 정보 ==");
+		System.out.printf("> 회원번호 : %d", loginedMember.id);
 		System.out.printf("> 로그인 아이디 : %s\n", loginedMember.loginId);
 		System.out.printf("> 이름 : %s\n", loginedMember.name);
 	}
