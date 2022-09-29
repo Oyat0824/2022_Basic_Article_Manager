@@ -25,7 +25,7 @@ public class ArticleDao extends Dao {
 	
 	// 검색 결과 리스트 뽑기
 	public List<Article> getForPrintArticles(String searchKeyword) {
-		if (searchKeyword != null) {
+		if (searchKeyword != null && searchKeyword.length() > 0) {
 			System.out.println("검색어 : " + searchKeyword);
 			
 			List<Article> forPrintArticles = new ArrayList<>();

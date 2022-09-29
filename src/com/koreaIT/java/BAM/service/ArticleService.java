@@ -9,7 +9,7 @@ import com.koreaIT.java.BAM.dto.Article;
 public class ArticleService {
 	private ArticleDao articleDao;
 	
-	ArticleService() {
+	public ArticleService() {
 		articleDao = Container.articleDao;
 	}
 	

@@ -153,7 +153,7 @@ public class MemberController extends Controller {
 //	프로필 보기 메서드
 	private void showProfile() {
 		System.out.println("== 내 정보 ==");
-		System.out.printf("> 회원번호 : %d", loginedMember.id);
+		System.out.printf("> 회원번호 : %d\n", loginedMember.id);
 		System.out.printf("> 로그인 아이디 : %s\n", loginedMember.loginId);
 		System.out.printf("> 이름 : %s\n", loginedMember.name);
 	}

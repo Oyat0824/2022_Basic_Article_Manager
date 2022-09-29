@@ -68,6 +68,7 @@ public class ArticleController extends Controller {
 //	게시글 수정 메서드
 	private void doModify() {
 		String[] cmdBits = cmd.split(" ");
+		
 		if(cmdBits.length == 2) {
 			System.out.println("[❌] 수정할 게시글 번호를 입력해주세요! [ ex) article modify 3 ]");
 			return;
