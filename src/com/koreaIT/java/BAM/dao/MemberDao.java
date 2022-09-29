@@ -6,7 +6,7 @@ import java.util.List;
 import com.koreaIT.java.BAM.dto.Member;
 
 public class MemberDao extends Dao {
-	public List<Member> members;
+	private List<Member> members;
 	
 	public MemberDao() {
 		members = new ArrayList<>();

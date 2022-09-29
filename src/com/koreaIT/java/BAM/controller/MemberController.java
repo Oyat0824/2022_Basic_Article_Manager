@@ -4,14 +4,17 @@ import java.util.Scanner;
 
 import com.koreaIT.java.BAM.container.Container;
 import com.koreaIT.java.BAM.dto.Member;
+import com.koreaIT.java.BAM.service.MemberService;
 import com.koreaIT.java.BAM.util.Util;
 
 public class MemberController extends Controller {
 	private Scanner sc;
+	private MemberService memberService;
 
 //	생성자
 	public MemberController(Scanner sc) {
 		this.sc = sc;
+		memberService = Container.memberService;
 	}
 
 //	명령어 분기 실행문
@@ -38,7 +41,7 @@ public class MemberController extends Controller {
 
 	//	회원가입 메서드
 	private void doJoin() {
-		int id = Container.memberService.getNewId();
+		int id = memberService.setMemberId();
 		String regDate = Util.getNowDateStr();
 
 		// 아이디 조건 루프
@@ -53,7 +56,7 @@ public class MemberController extends Controller {
 				continue;
 			}
 
-			if (Container.memberService.isLoginIdChk(loginId)) {
+			if (memberService.isLoginIdChk(loginId)) {
 				System.out.printf("[❌] 해당 아이디 < %s > 는 이미 사용중인 아이디입니다.\n", loginId);
 				continue;
 			}
@@ -89,7 +92,7 @@ public class MemberController extends Controller {
 		String name = sc.nextLine();
 
 		Member member = new Member(id, regDate, loginId, loginPw, name);
-		Container.memberService.add(member);
+		memberService.add(member);
 
 		System.out.printf("[✔️] [ %s ] 회원님 가입을 축하드립니다!\n", loginId);
 	}
@@ -122,7 +125,7 @@ public class MemberController extends Controller {
 				break;
 			}
 			
-			member = Container.memberService.getMemberByLoginId(loginId);
+			member = memberService.getMemberByLoginId(loginId);
 			
 			if(member == null) {
 				System.out.println("[❌] 해당 아이디는 존재하지 않습니다.");
@@ -163,8 +166,8 @@ public class MemberController extends Controller {
 	@Override
 	public void makeTestData() {
 		System.out.println(">> 테스트를 위한 회원 데이터를 생성합니다.");
-		Container.memberDao.add(new Member(Container.memberDao.getNewId(), Util.getNowDateStr(), "admin", "admin", "관리자"));
-		Container.memberDao.add(new Member(Container.memberDao.getNewId(), Util.getNowDateStr(), "test", "test", "테스트"));
-		Container.memberDao.add(new Member(Container.memberDao.getNewId(), Util.getNowDateStr(), "user", "user", "유저"));
+		memberService.add(new Member(memberService.setMemberId(), Util.getNowDateStr(), "admin", "admin", "관리자"));
+		memberService.add(new Member(memberService.setMemberId(), Util.getNowDateStr(), "test", "test", "테스트"));
+		memberService.add(new Member(memberService.setMemberId(), Util.getNowDateStr(), "user", "user", "유저"));
 	}
 }
