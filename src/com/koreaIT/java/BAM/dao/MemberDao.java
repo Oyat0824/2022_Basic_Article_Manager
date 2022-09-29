@@ -3,7 +3,6 @@ package com.koreaIT.java.BAM.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.koreaIT.java.BAM.dto.Article;
 import com.koreaIT.java.BAM.dto.Member;
 
 public class MemberDao extends Dao {
@@ -20,9 +19,9 @@ public class MemberDao extends Dao {
 	}
 	
 	// 작성자 이름 찾기
-	public String getWrtierName(Article article) {
+	public String getWrtierName(int memberId) {
 		for (Member member : members) {
-			if (article.memberId == member.id) {
+			if (memberId == member.id) {
 				return member.name;
 			}
 		}

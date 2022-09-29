@@ -128,7 +128,7 @@ public class ArticleController extends Controller {
 		System.out.println("번호		|		제목		|		작성자		|		작성일			|		조회수");
 		for (int i = forPrintArticles.size() - 1; i >= 0; i--) {
 			Article article = forPrintArticles.get(i);
-			String WriterName = Container.memberService.getWriterName(article);
+			String WriterName = Container.memberService.getWriterName(article.memberId);
 			
 			System.out.printf("%d		|		%s		|		%s		|		%s		|		%s\n", article.id, article.title, WriterName, article.regDate.substring(0, 10), article.viewCnt);
 		}
@@ -152,7 +152,7 @@ public class ArticleController extends Controller {
 			return;
 		}
 		
-		String WriterName = Container.memberService.getWriterName(foundArticle);
+		String WriterName = Container.memberService.getWriterName(foundArticle.memberId);
 		
 		foundArticle.addViewCnt();
 

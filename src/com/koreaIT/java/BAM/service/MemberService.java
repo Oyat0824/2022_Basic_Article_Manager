@@ -1,7 +1,6 @@
 package com.koreaIT.java.BAM.service;
 
 import com.koreaIT.java.BAM.container.Container;
-import com.koreaIT.java.BAM.dto.Article;
 import com.koreaIT.java.BAM.dto.Member;
 
 public class MemberService {
@@ -16,8 +15,8 @@ public class MemberService {
 	}
 	
 	// 작성자 이름 찾기
-	public String getWriterName(Article article) {
-		return Container.memberDao.getWrtierName(article);
+	public String getWriterName(int memberId) {
+		return Container.memberDao.getWrtierName(memberId);
 	}
 	
 	// 로그인 아이디에 따른 멤버 정보 가져오기
